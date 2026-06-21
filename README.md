@@ -5,7 +5,7 @@ Companion site for TSA Biotechnology Design, Team 7660 — National Conference, 
 A bioconjugated gold-electrode nanobiosensor for early detection of TDP-43, the blood-borne biomarker for ALS and frontotemporal dementia.
 
 ## Live site
-https://YOUR-USERNAME.github.io/REPO-NAME/
+https://PratyayVRao.github.io/tdp43-biosensor/
 
 ## Structure
 - `index.html` — main site
