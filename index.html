@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sensing TDP-43 — Bioconjugated Nanobiosensor for Early Neurodegenerative Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1620;
+  --ink-soft:#13222E;
+  --gold:#C9A24B;
+  --gold-bright:#E2C079;
+  --antibody:#4D7FB8;
+  --antibody-deep:#2F537A;
+  --antigen:#C44536;
+  --antigen-bright:#E15D4C;
+  --parchment:#F2EDE2;
+  --parchment-dim:#D8D0BE;
+  --slate:#8C9BA8;
+  --slate-dim:#5C6B78;
+  --line: rgba(242,237,226,0.14);
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ink);
+  color:var(--parchment);
+  font-family:var(--sans);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+}
+a{color:inherit;}
+::selection{background:var(--gold); color:var(--ink);}
+
+/* ===== Utility ===== */
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+.eyebrow::before{
+  content:'';
+  width:24px; height:1px;
+  background:var(--gold);
+  display:block;
+}
+h1,h2,h3{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
+section{position:relative;}
+.section-pad{padding:120px 0;}
+@media (max-width:768px){.section-pad{padding:80px 0;}}
+
+.reveal{opacity:0; transform:translateY(28px); transition:opacity 0.8s cubic-bezier(.2,.8,.2,1), transform 0.8s cubic-bezier(.2,.8,.2,1);}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+.btn{
+  font-family:var(--mono);
+  font-size:13px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  border:1px solid var(--gold);
+  color:var(--gold-bright);
+  background:transparent;
+  padding:12px 22px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.btn:hover{background:var(--gold); color:var(--ink);}
+.btn:focus-visible, a:focus-visible, button:focus-visible{outline:2px solid var(--gold-bright); outline-offset:3px;}
+
+/* ===== Intro scroll — brain spin ===== */
+.intro{
+  position:relative;
+  height:220vh; /* scroll distance that drives the effect */
+  background:var(--ink);
+}
+.intro-pin{
+  position:sticky;
+  top:0;
+  height:100vh;
+  width:100%;
+  overflow:hidden;
+  background:var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.intro-video{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:100%; height:100%;
+  object-fit:cover;
+  filter:brightness(0.78);
+  will-change:transform, opacity, filter;
+}
+.intro-vignette{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, transparent 30%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 18%, transparent 75%, rgba(0,0,0,0.65) 100%);
+  pointer-events:none;
+}
+.intro-content{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  height:100%;
+  width:100%;
+  padding:60px 32px;
+  text-align:center;
+  will-change:opacity, transform;
+}
+.intro-eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--gold-bright);
+  margin-top:8vh;
+  opacity:0.95;
+}
+.intro-title-wrap{
+  display:flex; flex-direction:column; align-items:center;
+  opacity:0; transform:translateY(18px) scale(0.97);
+  will-change:opacity, transform;
+}
+.intro-title{
+  font-family:var(--serif); font-weight:600;
+  font-size:clamp(2.2rem, 6vw, 5rem);
+  color:var(--parchment);
+  line-height:1.05;
+  letter-spacing:-0.01em;
+  max-width:16ch;
+}
+.intro-title .accent{
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--gold-bright);
+}
+.intro-sub{
+  font-family:var(--sans); font-size:15.5px; color:var(--slate);
+  max-width:42ch; margin-top:20px;
+}
+.intro-scroll-cue{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--slate); display:flex; flex-direction:column; align-items:center; gap:10px;
+  margin-bottom:6vh;
+}
+.intro-scroll-cue .line{width:1px; height:38px; background:linear-gradient(var(--gold-bright), transparent); animation:scrollline 2s ease-in-out infinite;}
+
+@media (max-width:760px){
+  .intro{height:190vh;}
+  .intro-eyebrow{margin-top:10vh; font-size:10.5px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .intro{height:auto;}
+  .intro-pin{position:relative; height:90vh;}
+}
+
+/* ===== Nav ===== */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(11,22,32,0);
+  backdrop-filter:blur(0px);
+  border-bottom:1px solid transparent;
+  transition:background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
+}
+nav.scrolled{
+  background:rgba(11,22,32,0.85);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:1180px; margin:0 auto; padding:18px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.nav-mark{
+  font-family:var(--mono); font-size:13px; letter-spacing:0.08em;
+  color:var(--parchment); display:flex; align-items:center; gap:10px;
+}
+.nav-mark .dot{width:8px; height:8px; border-radius:50%; background:var(--antigen); box-shadow:0 0 8px var(--antigen-bright); animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.5; transform:scale(0.8);}}
+.nav-links{display:flex; gap:32px; font-family:var(--mono); font-size:12px; letter-spacing:0.05em; text-transform:uppercase;}
+.nav-links a{color:var(--slate); text-decoration:none; transition:color 0.2s;}
+.nav-links a:hover{color:var(--gold-bright);}
+.nav-toggle{display:none; background:none; border:none; color:var(--parchment); font-size:22px; cursor:pointer;}
+@media (max-width:860px){
+  .nav-links{display:none;}
+  .nav-toggle{display:block;}
+}
+.nav-mobile{
+  display:none; flex-direction:column;
+  background:var(--ink-soft); border-bottom:1px solid var(--line);
+}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{
+  padding:16px 32px; color:var(--slate); text-decoration:none;
+  font-family:var(--mono); font-size:13px; text-transform:uppercase; letter-spacing:0.05em;
+  border-top:1px solid var(--line);
+}
+.nav-mobile a:hover{color:var(--gold-bright);}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:100vh;
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative;
+  padding-top:90px;
+  background:
+    radial-gradient(ellipse 800px 500px at 75% 20%, rgba(201,162,75,0.10), transparent 60%),
+    radial-gradient(ellipse 600px 500px at 15% 80%, rgba(77,127,184,0.08), transparent 60%),
+    var(--ink);
+}
+.hero-grid{
+  display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:center;
+}
+@media (max-width:920px){.hero-grid{grid-template-columns:1fr; gap:48px;}}
+.hero h1{
+  font-size:clamp(2.6rem, 5.2vw, 4.4rem);
+  line-height:1.04;
+  color:var(--parchment);
+}
+.hero h1 em{
+  font-style:normal;
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--gold-bright);
+}
+.hero-sub{
+  font-size:18px;
+  color:var(--slate);
+  max-width:46ch;
+  margin-top:24px;
+  font-weight:400;
+}
+.hero-meta{
+  margin-top:40px;
+  display:flex; gap:36px; flex-wrap:wrap;
+}
+.hero-meta div{font-family:var(--mono); font-size:12px; color:var(--slate-dim); text-transform:uppercase; letter-spacing:0.06em;}
+.hero-meta strong{display:block; color:var(--gold-bright); font-size:15px; margin-top:4px; letter-spacing:0;}
+.hero-cta{margin-top:44px; display:flex; gap:16px; flex-wrap:wrap;}
+
+/* Hero visual: animated antibody-antigen binding (signature motif echo) */
+.hero-visual{
+  aspect-ratio:1/1.05;
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-visual svg{width:100%; height:100%;}
+
+.scroll-cue{
+  position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
+  color:var(--slate-dim); display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.scroll-cue .line{width:1px; height:34px; background:linear-gradient(var(--gold), transparent); animation:scrollline 2s ease-in-out infinite;}
+@keyframes scrollline{0%{transform:scaleY(0); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 50.01%{transform-origin:bottom;} 100%{transform:scaleY(0); transform-origin:bottom;}}
+
+/* ===== Section heads ===== */
+.section-head{max-width:680px; margin-bottom:64px;}
+.section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.7rem); color:var(--parchment);}
+.section-head p{color:var(--slate); font-size:16.5px; margin-top:16px; max-width:58ch;}
+
+/* ===== Stat band ===== */
+.stat-band{
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  background:var(--ink-soft);
+}
+.stat-grid{display:grid; grid-template-columns:repeat(4,1fr); }
+.stat-cell{
+  padding:48px 32px; text-align:left;
+  border-right:1px solid var(--line);
+}
+.stat-cell:last-child{border-right:none;}
+@media (max-width:860px){
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-cell{border-bottom:1px solid var(--line);}
+  .stat-cell:nth-child(2n){border-right:none;}
+}
+.stat-num{font-family:var(--mono); font-size:clamp(1.8rem,3vw,2.5rem); color:var(--gold-bright); font-weight:600;}
+.stat-label{font-size:13.5px; color:var(--slate); margin-top:8px; line-height:1.4;}
+
+/* ===== Problem / Scenario ===== */
+.scenario-track{position:relative; margin-top:40px;}
+.scenario-track::before{
+  content:''; position:absolute; left:0; right:0; top:54px; height:1px;
+  background:linear-gradient(90deg, var(--gold) 0%, var(--gold) 33%, var(--antigen) 33%, var(--antigen) 100%);
+  opacity:0.35;
+}
+.scenario-cols{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);}
+@media (max-width:860px){.scenario-cols{grid-template-columns:1fr;}}
+.scenario-col{background:var(--ink); padding:32px 28px 36px;}
+.scenario-name{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--slate-dim);}
+.scenario-name strong{display:block; font-family:var(--serif); font-size:22px; color:var(--parchment); text-transform:none; letter-spacing:0; margin-top:6px;}
+.scenario-time{
+  display:inline-block; margin-top:14px; padding:5px 12px;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.04em;
+  border:1px solid var(--line); color:var(--gold-bright);
+}
+.scenario-col.bad .scenario-time{color:var(--antigen-bright); border-color:rgba(196,69,54,0.4);}
+.scenario-col p{margin-top:18px; font-size:14.5px; color:var(--slate);}
+.scenario-col .outcome{margin-top:18px; font-size:14px; color:var(--parchment); border-top:1px solid var(--line); padding-top:16px;}
+
+/* ===== Bioconjugation concept ===== */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+@media (max-width:920px){.split{grid-template-columns:1fr; gap:40px;}}
+.split.reverse .split-visual{order:2;}
+@media (max-width:920px){.split.reverse .split-visual{order:0;}}
+.split-text p{color:var(--slate); font-size:15.5px; margin-top:14px;}
+.split-text p strong{color:var(--parchment); font-weight:600;}
+
+.crosslinker-cards{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:28px;}
+@media (max-width:540px){.crosslinker-cards{grid-template-columns:1fr;}}
+.cl-card{border:1px solid var(--line); padding:20px;}
+.cl-card .cl-label{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--slate-dim);}
+.cl-card h4{font-family:var(--serif); font-size:17px; margin-top:6px; color:var(--parchment); font-weight:600;}
+.cl-card p{font-size:13px; color:var(--slate); margin-top:8px;}
+
+/* ===== Reaction tabs ===== */
+.tabs{display:flex; gap:8px; border-bottom:1px solid var(--line); margin-bottom:36px; flex-wrap:wrap;}
+.tab-btn{
+  font-family:var(--mono); font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em;
+  background:none; border:none; color:var(--slate-dim); padding:14px 4px; cursor:pointer;
+  position:relative; margin-right:28px;
+}
+.tab-btn::after{content:''; position:absolute; bottom:-1px; left:0; right:0; height:2px; background:var(--gold); transform:scaleX(0); transition:transform 0.25s ease;}
+.tab-btn.active{color:var(--gold-bright);}
+.tab-btn.active::after{transform:scaleX(1);}
+.tab-panel{display:none;}
+.tab-panel.active{display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:start;}
+@media (max-width:860px){.tab-panel.active{grid-template-columns:1fr;}}
+.tab-panel h4{font-family:var(--serif); font-size:22px; color:var(--parchment); margin-bottom:14px;}
+.tab-panel p{color:var(--slate); font-size:15px; margin-bottom:12px;}
+.tab-meta{display:flex; gap:24px; margin-top:20px; flex-wrap:wrap;}
+.tab-meta div{font-family:var(--mono); font-size:11px; color:var(--slate-dim); text-transform:uppercase; letter-spacing:0.05em;}
+.tab-meta strong{display:block; color:var(--gold-bright); font-size:14px; margin-top:4px; letter-spacing:0;}
+
+/* ===== LAYER BUILDER — signature element ===== */
+.builder{
+  background:var(--ink-soft);
+  border:1px solid var(--line);
+  padding:0;
+  overflow:hidden;
+}
+.builder-grid{display:grid; grid-template-columns:0.95fr 1.05fr;}
+@media (max-width:920px){.builder-grid{grid-template-columns:1fr;}}
+.builder-stage{
+  padding:48px 40px;
+  background:
+    radial-gradient(ellipse 500px 400px at 50% 100%, rgba(201,162,75,0.08), transparent),
+    var(--ink);
+  display:flex; align-items:center; justify-content:center;
+  border-right:1px solid var(--line);
+  min-height:480px;
+}
+@media (max-width:920px){.builder-stage{border-right:none; border-bottom:1px solid var(--line); min-height:380px;}}
+.builder-controls{padding:48px 44px;}
+.layer-list{list-style:none; display:flex; flex-direction:column; gap:2px;}
+.layer-item{
+  display:flex; align-items:flex-start; gap:16px;
+  padding:16px 14px; cursor:pointer;
+  border-left:2px solid transparent;
+  transition:background 0.2s, border-color 0.2s;
+}
+.layer-item:hover{background:rgba(242,237,226,0.03);}
+.layer-item.active{background:rgba(201,162,75,0.07); border-left-color:var(--gold);}
+.layer-num{
+  font-family:var(--mono); font-size:12px; color:var(--slate-dim);
+  width:22px; flex-shrink:0; padding-top:2px;
+}
+.layer-item.active .layer-num{color:var(--gold-bright);}
+.layer-item.done .layer-num::after{content:'✓'; margin-left:2px;}
+.layer-body h5{font-family:var(--sans); font-weight:600; font-size:14.5px; color:var(--parchment);}
+.layer-body p{font-size:13px; color:var(--slate); margin-top:4px; max-height:0; overflow:hidden; transition:max-height 0.3s ease;}
+.layer-item.active .layer-body p{max-height:120px; margin-top:6px;}
+.builder-actions{display:flex; gap:12px; margin-top:28px;}
+.builder-actions .btn{flex:1; justify-content:center;}
+.builder-readout{
+  margin-top:24px; padding-top:24px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:12px; color:var(--slate-dim);
+}
+.builder-readout strong{color:var(--gold-bright); font-size:14px;}
+
+/* ===== Detection / DPV ===== */
+.dpv-card{border:1px solid var(--line); padding:36px; background:var(--ink-soft);}
+.dpv-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;}
+
+/* ===== Comparison table ===== */
+.comp-table{width:100%; border-collapse:collapse; margin-top:8px;}
+.comp-table th, .comp-table td{text-align:left; padding:16px 18px; border-bottom:1px solid var(--line); font-size:14.5px;}
+.comp-table th{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--slate-dim); font-weight:500;}
+.comp-table td.num{font-family:var(--mono); color:var(--gold-bright);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table .row-label{color:var(--parchment); font-weight:600;}
+.table-wrap{overflow-x:auto; border:1px solid var(--line);}
+.table-wrap .comp-table{margin-top:0;}
+.table-wrap th, .table-wrap td{padding:16px 20px;}
+
+/* ===== Gallery ===== */
+.gallery{display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px;}
+@media (max-width:860px){.gallery{grid-template-columns:1fr;}}
+.gallery figure{margin:0; border:1px solid var(--line); overflow:hidden; background:var(--ink-soft);}
+.gallery img{width:100%; display:block; height:100%; object-fit:cover;}
+.gallery figcaption{padding:18px 20px; font-size:13.5px; color:var(--slate); border-top:1px solid var(--line);}
+.gallery figcaption strong{color:var(--parchment); display:block; font-family:var(--serif); font-size:15px; margin-bottom:4px; font-weight:600;}
+
+/* ===== Footer / Works cited ===== */
+footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--ink-soft);}
+.cite-list{columns:2; column-gap:48px; margin-top:24px;}
+@media (max-width:760px){.cite-list{columns:1;}}
+.cite-list div{font-size:12.5px; color:var(--slate); margin-bottom:16px; break-inside:avoid; line-height:1.5;}
+.cite-list div em{color:var(--slate-dim); font-style:italic;}
+.footer-bottom{margin-top:60px; padding-top:28px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-family:var(--mono); font-size:11.5px; color:var(--slate-dim); text-transform:uppercase; letter-spacing:0.05em;}
+
+/* divider with label, used sparingly */
+.divider-label{
+  display:flex; align-items:center; gap:16px; margin-bottom:18px;
+}
+.divider-label::after{content:''; flex:1; height:1px; background:var(--line);}
+.divider-label span{font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-dim);}
+
+.pill{display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:0.05em; text-transform:uppercase; padding:4px 10px; border:1px solid var(--line); color:var(--slate);}
+.pill.gold{border-color:rgba(201,162,75,0.4); color:var(--gold-bright);}
+.pill.blue{border-color:rgba(77,127,184,0.4); color:var(--antibody);}
+.pill.red{border-color:rgba(196,69,54,0.4); color:var(--antigen-bright);}
+
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--ink);}
+::-webkit-scrollbar-thumb{background:var(--ink-soft); border:1px solid var(--line);}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-mark"><span class="dot"></span> TDP-43 / NANOBIOSENSOR</div>
+    <div class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#chemistry">Chemistry</a>
+      <a href="#construction">Construction</a>
+      <a href="#detection">Detection</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#display">Display</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="#problem">Problem</a>
+    <a href="#chemistry">Chemistry</a>
+    <a href="#construction">Construction</a>
+    <a href="#detection">Detection</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#display">Display</a>
+  </div>
+</nav>
+
+<!-- ============ INTRO SCROLL — brain spin into headline ============ -->
+<section class="intro" id="intro">
+  <div class="intro-pin">
+    <video class="intro-video" id="intro-video" autoplay muted loop playsinline poster="assets/brain-poster.jpg">
+      <source src="assets/brain-spin.mp4" type="video/mp4">
+    </video>
+    <div class="intro-vignette"></div>
+    <div class="intro-content">
+      <div class="intro-eyebrow">TSA BIOTECHNOLOGY DESIGN · TEAM 7660</div>
+      <div class="intro-title-wrap">
+        <h1 class="intro-title">Sensing TDP-43</h1>
+        <p class="intro-sub">Before the damage is done.</p>
+      </div>
+      <div class="intro-scroll-cue"><div class="line"></div>SCROLL TO BEGIN</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">TSA Biotechnology Design · Team 7660</div>
+      <h1>Catching neurodegeneration<br><em>before</em> it becomes permanent.</h1>
+      <p class="hero-sub">A bioconjugated gold-electrode nanobiosensor that detects TDP-43 — the blood-borne signature of ALS and frontotemporal dementia — at concentrations 10× more sensitive than conventional methods, from a single drop of serum.</p>
+      <div class="hero-meta">
+        <div>Detection floor<strong>0.5 pg/mL</strong></div>
+        <div>Time to result<strong>&lt; 60 min</strong></div>
+        <div>Cost per device<strong>$2.10</strong></div>
+        <div>Sensitivity gain<strong>10× monolayer</strong></div>
+      </div>
+      <div class="hero-cta">
+        <a href="#construction" class="btn">Build the sensor, layer by layer ↓</a>
+      </div>
+    </div>
+    <div class="hero-visual" id="hero-svg-mount"></div>
+  </div>
+  <div class="scroll-cue"><div class="line"></div>SCROLL</div>
+</header>
+
+<!-- ============ PROBLEM / SCENARIO ============ -->
+<section id="problem" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">01 — The Diagnostic Gap</div>
+      <h2>Neurons lost to disease never return.</h2>
+      <p>ALS, frontotemporal dementia, and Alzheimer's share one brutal property: irreversibility. No therapy restores a neuron that has already died — so the only variable left to control is <em style="color:var(--parchment); font-style:normal;">how early disease is caught</em>. Today's diagnostic pathway is built on tools that are expensive, invasive, and often months too slow.</p>
+    </div>
+
+    <div class="scenario-track reveal">
+      <div class="scenario-cols">
+        <div class="scenario-col good">
+          <div class="scenario-name">PATIENT A<strong>Marco</strong></div>
+          <span class="scenario-time">2 weeks to referral</span>
+          <p>Receives a blood draw analyzed by a SATA-bioconjugated nanobiosensor as part of a clinical trial. Elevated TDP-43 (0.8 ng/mL) flagged well below the threshold conventional ELISA could reliably catch.</p>
+          <div class="outcome">Begins neuroprotective treatment and enrolls in a targeted ALS trial. Two years later, progression is significantly slowed.</div>
+        </div>
+        <div class="scenario-col">
+          <div class="scenario-name">PATIENT B<strong>Elena</strong></div>
+          <span class="scenario-time">16 months to diagnosis</span>
+          <p>Standard bloodwork returns normal — no biomarker test is available at her facility. She is reassured and sent home as symptoms quietly progress.</p>
+          <div class="outcome">By confirmation via lumbar puncture, an estimated 30% of spinal motor neurons are already lost.</div>
+        </div>
+        <div class="scenario-col bad">
+          <div class="scenario-name">PATIENT C<strong>James</strong></div>
+          <span class="scenario-time">8 months on a waitlist</span>
+          <p>Lives three hours from the nearest academic medical center. His family doctor suspects something neurological but has no fast-track referral network.</p>
+          <div class="outcome">Diagnosed with FTD and confirmed TDP-43 pathology — a stage at which a local point-of-care test could have changed the entire trajectory.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STAT BAND ============ -->
+<div class="stat-band">
+  <div class="wrap">
+    <div class="stat-grid">
+      <div class="stat-cell reveal"><div class="stat-num">10–18 mo</div><div class="stat-label">average wait from ALS symptom onset to confirmed diagnosis</div></div>
+      <div class="stat-cell reveal"><div class="stat-num">~50%</div><div class="stat-label">of ALS patients receive an incorrect diagnosis first</div></div>
+      <div class="stat-cell reveal"><div class="stat-num">3</div><div class="stat-label">physicians seen on average before ALS is confirmed</div></div>
+      <div class="stat-cell reveal"><div class="stat-num">4.8×</div><div class="stat-label">median plasma TDP-43 in ALS patients vs. healthy controls</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BIOCONJUGATION CONCEPT ============ -->
+<section id="chemistry" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">02 — The Chemistry</div>
+      <h2>What bioconjugation actually does</h2>
+      <p>Two components, neither capable of the other's job. An antibody can recognize a single target protein but cannot report that recognition electrically. A gold electrode can transduce an electrical signal but cannot tell one protein from another. Bioconjugation is the covalent bridge that fuses them into one functioning sensor.</p>
+    </div>
+
+    <div class="split reverse">
+      <div class="split-visual" id="crosslinker-svg-mount"></div>
+      <div class="split-text">
+        <h3 style="font-size:1.5rem; color:var(--parchment); margin-bottom:6px;">Homobifunctional vs. heterobifunctional</h3>
+        <p>Crosslinkers are molecular bridges that target the reactive groups naturally sitting on an antibody's surface — primary amines on lysine residues, thiols on cysteine residues.</p>
+        <div class="crosslinker-cards">
+          <div class="cl-card">
+            <div class="cl-label">Symmetric</div>
+            <h4>Homobifunctional</h4>
+            <p>Identical reactive groups at both ends. Bridges two matching functional groups — but offers no control over orientation.</p>
+          </div>
+          <div class="cl-card">
+            <div class="cl-label">Directional · used here</div>
+            <h4>Heterobifunctional</h4>
+            <p>Two different reactive ends enable step-wise, directional conjugation — keeping the antibody's binding site facing outward and accessible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REACTION TABS ============ -->
+<section class="section-pad" style="background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">03 — Reaction Pathways</div>
+      <h2>Three ways to make the bond</h2>
+      <p>Each bioconjugation strategy trades speed, control, and cost differently. The biosensor described here uses the second: SATA thiol modification.</p>
+    </div>
+
+    <div class="reveal">
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="nhs" role="tab">I · NHS Ester</button>
+        <button class="tab-btn" data-tab="sata" role="tab">II · SATA Thiol — used here</button>
+        <button class="tab-btn" data-tab="click" role="tab">III · Click Chemistry</button>
+      </div>
+
+      <div class="tab-panel active" id="panel-nhs">
+        <div>
+          <h4>NHS Ester / Amine Coupling</h4>
+          <p>N-hydroxysuccinimide esters react with primary amine groups on the antibody surface under mild physiologic-to-alkaline conditions, yielding stable amide bonds. Fast, efficient, and gentle enough to leave the antibody undamaged.</p>
+          <p>Its weakness is precision: lysines sit all over the antibody, including near the binding site, so some fraction of conjugated antibodies end up oriented the wrong way — facing into the surface instead of out toward the sample.</p>
+        </div>
+        <div class="dpv-card" style="padding:24px;">
+          <div class="tab-meta">
+            <div>pH window<strong>7.2 – 9.0</strong></div>
+            <div>Site control<strong>Low</strong></div>
+            <div>Bond type<strong>Amide</strong></div>
+            <div>Speed<strong>Fast</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-sata">
+        <div>
+          <h4>SATA Thiol Modification</h4>
+          <p>SATA (N-succinimidyl S-acetylthioacetate) reacts with antibody amines to install a protected thiol. Hydroxylamine deprotection then liberates a free sulfhydryl group on the antibody surface.</p>
+          <p>That sulfhydryl forms a spontaneous gold–sulfur (Au–S) bond directly with the electrode — among the most stable, well-characterized linkages in biosensor chemistry — giving denser surface coverage and far more consistent antibody orientation than NHS coupling alone.</p>
+        </div>
+        <div class="dpv-card" style="padding:24px;">
+          <div class="tab-meta">
+            <div>Bond formed<strong>Au–S</strong></div>
+            <div>Surface coverage<strong>High / dense</strong></div>
+            <div>Cost per sensor<strong>$2.10</strong></div>
+            <div>Site control<strong>High</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-click">
+        <div>
+          <h4>Click Chemistry (CuAAC / SPAAC)</h4>
+          <p>Azide groups react with alkyne groups to form a stable triazole ring — fast, aqueous-compatible, and producing no unwanted byproducts. The copper-free SPAAC variant avoids cytotoxic copper catalysts entirely.</p>
+          <p>Its defining property is bioorthogonality: azides and alkynes don't occur naturally in biological samples, so the reaction finds only its intended partner — the most precisely controlled conjugation method available.</p>
+        </div>
+        <div class="dpv-card" style="padding:24px;">
+          <div class="tab-meta">
+            <div>Bond formed<strong>Triazole</strong></div>
+            <div>Byproducts<strong>None</strong></div>
+            <div>Bioorthogonal<strong>Yes</strong></div>
+            <div>Catalyst<strong>Cu-free (SPAAC)</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAYER BUILDER ============ -->
+<section id="construction" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">04 — Construction</div>
+      <h2>Build the sensor, layer by layer</h2>
+      <p>Four layers, each earning its place on the electrode. Click through the stack — the same sequence physically modeled in our 3D-printed antibody/antigen demonstration.</p>
+    </div>
+
+    <div class="builder reveal">
+      <div class="builder-grid">
+        <div class="builder-stage" id="layer-svg-mount"></div>
+        <div class="builder-controls">
+          <ul class="layer-list" id="layer-list">
+            <li class="layer-item active" data-layer="0">
+              <span class="layer-num">01</span>
+              <div class="layer-body">
+                <h5>Gold electrode substrate</h5>
+                <p>Highly conductive and biocompatible, with a unique chemical affinity for thiol-containing molecules through Au–S bond formation — the foundation every other layer anchors to.</p>
+              </div>
+            </li>
+            <li class="layer-item" data-layer="1">
+              <span class="layer-num">02</span>
+              <div class="layer-body">
+                <h5>Self-assembled monolayer (SAM)</h5>
+                <p>A single organized layer of thiol molecules that primes the gold surface and resists non-specific protein adsorption — without it, background serum proteins would stick randomly and generate false signal.</p>
+              </div>
+            </li>
+            <li class="layer-item" data-layer="2">
+              <span class="layer-num">03</span>
+              <div class="layer-body">
+                <h5>Bioconjugated antibody layer</h5>
+                <p>SATA-thiolated anti-TDP-43 antibodies form spontaneous Au–S bonds with the gold surface, anchoring with binding sites consistently oriented outward and accessible.</p>
+              </div>
+            </li>
+            <li class="layer-item" data-layer="3">
+              <span class="layer-num">04</span>
+              <div class="layer-body">
+                <h5>BSA blocking layer</h5>
+                <p>Bovine serum albumin fills the remaining gaps of exposed gold between antibodies — chemically inert, so only TDP-43 binding can ever generate a signal.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="builder-actions">
+            <button class="btn" id="prev-layer">← Prev</button>
+            <button class="btn" id="next-layer">Next →</button>
+          </div>
+          <div class="builder-readout">
+            Stack status: <strong id="layer-readout">Layer 1 of 4 active</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DETECTION / DPV ============ -->
+<section id="detection" class="section-pad" style="background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">05 — Detection Mechanism</div>
+      <h2>From a bound protein to a number</h2>
+      <p>TDP-43 normally lives in the nucleus, regulating gene expression. In ALS and FTD it mislocalizes, misfolds, and leaks into the bloodstream as neurons break down — which is exactly what makes it detectable outside the body.</p>
+    </div>
+
+    <div class="split reveal">
+      <div class="split-text">
+        <h3 style="font-size:1.5rem; color:var(--parchment); margin-bottom:6px;">Differential pulse voltammetry</h3>
+        <p>When serum is applied, TDP-43 molecules diffuse to the electrode and bind the anchored antibodies. <strong>That binding event physically changes the electrode interface</strong> — added mass, shifted charge distribution — which alters how it responds to an applied voltage.</p>
+        <p>A series of small voltage pulses is applied and the resulting current measured. The shift in current maps directly onto TDP-43 concentration via a calibration curve — turning a molecular binding event into a precise, readable number in under an hour.</p>
+      </div>
+      <div class="dpv-card">
+        <div class="divider-label"><span>Detection range</span></div>
+        <div class="dpv-row">
+          <div>
+            <div class="stat-num" style="font-size:1.6rem;">0.0005 – 1 µg/mL</div>
+            <div class="stat-label">undiluted human serum — spans early to advanced disease</div>
+          </div>
+        </div>
+        <div style="margin-top:28px;" class="divider-label"><span>Process</span></div>
+        <div class="tab-meta">
+          <div>Sample<strong>Blood serum</strong></div>
+          <div>Method<strong>DPV</strong></div>
+          <div>Time<strong>&lt; 60 min</strong></div>
+          <div>Amplification steps<strong>None required</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVIDENCE / COMPARISON ============ -->
+<section id="evidence" class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">06 — Performance</div>
+      <h2>Bioconjugation vs. conventional monolayer</h2>
+      <p>Sensitivity, specificity, practicality — the three metrics any diagnostic tool is judged on.</p>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table class="comp-table">
+        <thead>
+          <tr><th>Metric</th><th>Conventional monolayer</th><th>SATA-bioconjugated (this device)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="row-label">Relative current output</td><td class="num">1×</td><td class="num">10×</td></tr>
+          <tr><td class="row-label">Au–S surface density</td><td class="num">Lower</td><td class="num">Significantly higher</td></tr>
+          <tr><td class="row-label">Antibody orientation control</td><td class="num">Random</td><td class="num">Directionally controlled</td></tr>
+          <tr><td class="row-label">Detection floor</td><td class="num">— </td><td class="num">0.0005 µg/mL</td></tr>
+          <tr><td class="row-label">Fabrication cost</td><td class="num">—</td><td class="num">$2.10 / device</td></tr>
+          <tr><td class="row-label">Time to result</td><td class="num">—</td><td class="num">&lt; 60 minutes</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="reveal" style="margin-top:40px; max-width:740px;">
+      <div class="divider-label"><span>Limitations — honestly stated</span></div>
+      <p style="color:var(--slate); font-size:15px;">Validation to date has occurred primarily in controlled laboratory settings with prepared samples. Larger clinical trials across diverse patient populations and disease stages, FDA regulatory review, and performance testing in whole blood without prior centrifugation all remain active areas of work before point-of-care deployment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DISPLAY / GALLERY ============ -->
+<section id="display" class="section-pad" style="background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">07 — Physical Display</div>
+      <h2>What's on the table at nationals</h2>
+      <p>Two hands-on models translate the chemistry above into something a judge can physically pick up and manipulate during the interview.</p>
+    </div>
+
+    <div class="gallery reveal">
+      <figure>
+        <img src="assets/antigen-kit.jpg" alt="3D-printed magnetic antibody-antigen interactive kit: blue Y-shaped antibodies attaching to red TDP-43 antigens on a white gold-electrode disc">
+        <figcaption><strong>Magnetic antibody–antigen kit</strong>Blue Y-shaped antibodies (anti-TDP-43) magnetically dock onto red antigen pieces seated on a white disc representing the gold electrode — letting a judge physically perform the binding step that the DPV readout measures electrically.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/brain-model.jpg" alt="Laser-cut layered acrylic coronal brain model with illuminated red marker showing site of TDP-43 pathology">
+        <figcaption><strong>Layered acrylic brain model</strong>Laser-cut coronal slices stacked and backlit, with a red illuminated marker locating where TDP-43 pathology concentrates in ALS/FTD — built on the same lamination technique as our earlier brain model for AP Biology.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER / CITATIONS ============ -->
+<footer>
+  <div class="wrap">
+    <div class="divider-label"><span>Works Cited</span></div>
+    <div class="cite-list">
+      <div>Adams, Katie. "Katie Adams: Living with ALS, In Her Own Words." <em>ALS Association</em>, 8 Dec. 2023.</div>
+      <div>"ALS – Amyotrophic Lateral Sclerosis." <em>Khan Academy</em>, YouTube, 25 Aug. 2014.</div>
+      <div>Dai, Yifan, et al. "Application of Bioconjugation Chemistry on Biosensor Fabrication for Detection of TAR-DNA Binding Protein 43." <em>Biosensors and Bioelectronics</em>, vol. 117, 2018, pp. 60–67.</div>
+      <div>Demos, Catherine, et al. "Novel immunoassays for TDP-43 detection in plasma and CSF." <em>Alzheimer's &amp; Dementia</em>, vol. 21, suppl. 2, 2025.</div>
+      <div>Ling, Shuo-Chien, et al. "Converging mechanisms in ALS and FTD: disrupted RNA and protein homeostasis." <em>Neuron</em>, vol. 79, no. 3, 2013, pp. 416–38.</div>
+      <div>Paganoni, Sabrina, et al. "Diagnostic Timelines and Delays in Diagnosing ALS." <em>Amyotrophic Lateral Sclerosis and Frontotemporal Degeneration</em>, vol. 15, 2014, pp. 453–56.</div>
+      <div>Pingarrón, José M., et al. "Gold Nanoparticle-based Electrochemical Biosensors." <em>Electrochimica Acta</em>, vol. 53, no. 19, 2008, pp. 5848–66.</div>
+      <div>Thermo Fisher Scientific. "Amine-Reactive Crosslinker Chemistry." <em>Thermo Fisher Scientific</em>.</div>
+      <div>Sennfält, Stefan, et al. "The Path to Diagnosis in ALS." <em>Amyotrophic Lateral Sclerosis and Frontotemporal Degeneration</em>, vol. 24, 2022, pp. 45–53.</div>
+      <div>Teunissen, Charlotte E., et al. "Plasma Amyloid-β (Aβ42) Correlates with Cerebrospinal Fluid Aβ42 in Alzheimer's Disease." <em>Journal of Alzheimer's Disease</em>, vol. 62, no. 4, 2018, pp. 1857–63.</div>
+    </div>
+    <div class="footer-bottom">
+      <span>TSA National Conference · Team 7660</span>
+      <span>Biotechnology Design · Washington, D.C. · June 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
