@@ -415,7 +415,50 @@ nav.scrolled{
 .table-wrap .comp-table{margin-top:0;}
 .table-wrap th, .table-wrap td{padding:16px 20px;}
 
-/* ===== Gallery ===== */
+/* ===== Physical Proof section ===== */
+.proof-grid{display:flex; flex-direction:column; gap:64px; margin-top:8px;}
+.proof-card{
+  display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:center;
+}
+.proof-card.reverse{grid-template-columns:1.15fr 0.85fr;}
+.proof-card.reverse .proof-media{order:2;}
+@media (max-width:880px){
+  .proof-card, .proof-card.reverse{grid-template-columns:1fr;}
+  .proof-card.reverse .proof-media{order:0;}
+}
+.proof-media{
+  border:1px solid var(--line);
+  overflow:hidden;
+  background:var(--ink);
+  aspect-ratio:4/5;
+}
+.proof-media img{width:100%; height:100%; object-fit:cover; display:block;}
+.proof-kicker{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--gold-bright); margin-bottom:10px;
+}
+.proof-text h3{font-size:1.7rem; color:var(--parchment); margin-bottom:16px; line-height:1.2;}
+.proof-text p{color:var(--slate); font-size:15.5px; margin-bottom:14px;}
+.proof-text p em{color:var(--parchment); font-style:normal;}
+.proof-foot{
+  font-family:var(--mono); font-size:12px; color:var(--slate-dim);
+  margin-top:20px; padding-top:16px; border-top:1px solid var(--line);
+}
+.proof-foot a{color:var(--gold-bright); text-decoration:underline; text-underline-offset:3px;}
+
+.proof-bridge{
+  margin-top:64px; padding-top:40px; border-top:1px solid var(--line);
+  display:flex; gap:24px; align-items:flex-start;
+}
+.proof-bridge-line{
+  width:1px; align-self:stretch; min-height:48px;
+  background:linear-gradient(var(--gold), transparent);
+  flex-shrink:0; margin-top:4px;
+}
+.proof-bridge p{color:var(--slate); font-size:15px; max-width:72ch;}
+.proof-bridge p em{color:var(--gold-bright); font-style:normal;}
+
+/* ===== Gallery (legacy, kept for potential reuse) ===== */
 .gallery{display:grid; grid-template-columns:1.1fr 0.9fr; gap:24px;}
 @media (max-width:860px){.gallery{grid-template-columns:1fr;}}
 .gallery figure{margin:0; border:1px solid var(--line); overflow:hidden; background:var(--ink-soft);}
@@ -456,21 +499,21 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
     <div class="nav-mark"><span class="dot"></span> TDP-43 / NANOBIOSENSOR</div>
     <div class="nav-links">
       <a href="#problem">Problem</a>
+      <a href="#display">The Proof</a>
       <a href="#chemistry">Chemistry</a>
       <a href="#construction">Construction</a>
       <a href="#detection">Detection</a>
       <a href="#evidence">Evidence</a>
-      <a href="#display">Display</a>
     </div>
     <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
   </div>
   <div class="nav-mobile" id="nav-mobile">
     <a href="#problem">Problem</a>
+    <a href="#display">The Proof</a>
     <a href="#chemistry">Chemistry</a>
     <a href="#construction">Construction</a>
     <a href="#detection">Detection</a>
     <a href="#evidence">Evidence</a>
-    <a href="#display">Display</a>
   </div>
 </nav>
 
@@ -506,7 +549,7 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
         <div>Sensitivity gain<strong>10× monolayer</strong></div>
       </div>
       <div class="hero-cta">
-        <a href="#construction" class="btn">Build the sensor, layer by layer ↓</a>
+        <a href="#display" class="btn">See the proof in hand ↓</a>
       </div>
     </div>
     <div class="hero-visual" id="hero-svg-mount"></div>
@@ -548,6 +591,53 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
   </div>
 </section>
 
+<!-- ============ PHYSICAL PROOF — moved up, rewritten ============ -->
+<section id="display" class="section-pad" style="background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">02 — The Proof, In Hand</div>
+      <h2>Two models. Two halves of the same argument.</h2>
+      <p>Everything below this point is the chemistry that makes these two objects true at the same time. Hold them first — the rest of this page just explains how we built them.</p>
+    </div>
+
+    <div class="proof-grid reveal">
+
+      <!-- PROOF 1: antigen-antibody kit -->
+      <article class="proof-card">
+        <div class="proof-media">
+          <img src="assets/antigen-kit.jpg" alt="3D-printed antibody-antigen kit: blue Y-shaped antibodies docking onto red TDP-43 antigens on a white gold-electrode disc">
+        </div>
+        <div class="proof-text">
+          <div class="proof-kicker">Proof 1 — Specificity</div>
+          <h3>The binding only works one way.</h3>
+          <p>Each blue antibody piece ends in a binding pocket cut to one shape. Each red TDP-43 antigen piece is cast to that exact complementary shape — and only that shape. Pick up any antibody piece and you can feel it: it seats cleanly onto a TDP-43 antigen and refuses to seat onto anything else on the board.</p>
+          <p>That's not a toy simplification — it's the literal mechanism of antibody specificity. A real anti-TDP-43 antibody's binding site is a 3D pocket shaped by its amino acid sequence to fit one target protein and reject everything else circulating in serum. The model swaps molecular shape-matching for a physical one a judge can perform with their hands, but the principle — one binding site, one target — is exactly what's anchored to the electrode three sections from now.</p>
+          <div class="proof-foot">Geometry adapted from the open-source <a href="https://www.printables.com/model/187536-antibody-modelling-kit" target="_blank" rel="noopener">Antibody Modelling Kit</a> (mkuiper, Printables) — rebuilt as a hand-docking demonstration with a gold-electrode base piece in place of the original virus adapter.</div>
+        </div>
+      </article>
+
+      <!-- PROOF 2: brain model -->
+      <article class="proof-card reverse">
+        <div class="proof-media">
+          <img src="assets/brain-model.jpg" alt="Laser-cut layered acrylic coronal brain model, lit from below, showing a glowing red lesion visible in one specific slice">
+        </div>
+        <div class="proof-text">
+          <div class="proof-kicker">Proof 2 — The Cost of Lateness</div>
+          <h3>This is what waiting looks like.</h3>
+          <p>Each acrylic pane is its own laser-cut coronal cross-section — look at any single sheet on its own and it reads exactly like one frame from an MRI scan. Stack and backlight all of them together and they fuse into one volumetric brain, the same way a radiologist mentally reconstructs a 3D structure from a stack of 2D scan slices.</p>
+          <p>The red glow marks a lesion — visible only once disease has already reorganized tissue at a scale MRI can resolve. That's the entire premise of this project stated physically: <strong style="color:var(--parchment);">by the time something is visible here, TDP-43 has already been elevated in blood for months.</strong> The biosensor's job is to catch the molecule on the next page, long before it ever produces a slice that looks like this one.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="proof-bridge reveal">
+      <div class="proof-bridge-line"></div>
+      <p>Both objects make the same claim from opposite ends of the timeline. The next four sections explain, in order, how we manufacture that claim on an actual electrode: the chemistry that creates the lock <em>(03)</em>, the four-layer build that anchors it to gold <em>(04)</em>, the readout that turns one binding event into a number <em>(05)</em>, and the evidence that the number is trustworthy <em>(06)</em>.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ STAT BAND ============ -->
 <div class="stat-band">
   <div class="wrap">
@@ -564,7 +654,7 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
 <section id="chemistry" class="section-pad">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">02 — The Chemistry</div>
+      <div class="eyebrow">03 — The Chemistry</div>
       <h2>What bioconjugation actually does</h2>
       <p>Two components, neither capable of the other's job. An antibody can recognize a single target protein but cannot report that recognition electrically. A gold electrode can transduce an electrical signal but cannot tell one protein from another. Bioconjugation is the covalent bridge that fuses them into one functioning sensor.</p>
     </div>
@@ -664,7 +754,7 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
     <div class="section-head reveal">
       <div class="eyebrow">04 — Construction</div>
       <h2>Build the sensor, layer by layer</h2>
-      <p>Four layers, each earning its place on the electrode. Click through the stack — the same sequence physically modeled in our 3D-printed antibody/antigen demonstration.</p>
+      <p>Four layers, each earning its place on the electrode. This is the gold disc from Proof 1, built up step by step — the same shape-matched antibody you hand-docked onto TDP-43 is what's anchored here permanently, this time with a covalent chemical bond instead of a hand.</p>
     </div>
 
     <div class="builder reveal">
@@ -728,6 +818,7 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
         <h3 style="font-size:1.5rem; color:var(--parchment); margin-bottom:6px;">Differential pulse voltammetry</h3>
         <p>When serum is applied, TDP-43 molecules diffuse to the electrode and bind the anchored antibodies. <strong>That binding event physically changes the electrode interface</strong> — added mass, shifted charge distribution — which alters how it responds to an applied voltage.</p>
         <p>A series of small voltage pulses is applied and the resulting current measured. The shift in current maps directly onto TDP-43 concentration via a calibration curve — turning a molecular binding event into a precise, readable number in under an hour.</p>
+        <p style="margin-top:24px; padding-top:20px; border-top:1px solid var(--line);">This is the number Marco's doctor had and James's didn't. It's also the earliest possible signal — read here in serum, in under an hour — for the same pathology that eventually shows up as the glowing lesion in the brain model from Proof 2.</p>
       </div>
       <div class="dpv-card">
         <div class="divider-label"><span>Detection range</span></div>
@@ -782,27 +873,6 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
 </section>
 
 <!-- ============ DISPLAY / GALLERY ============ -->
-<section id="display" class="section-pad" style="background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">07 — Physical Display</div>
-      <h2>What's on the table at nationals</h2>
-      <p>Two hands-on models translate the chemistry above into something a judge can physically pick up and manipulate during the interview.</p>
-    </div>
-
-    <div class="gallery reveal">
-      <figure>
-        <img src="assets/antigen-kit.jpg" alt="3D-printed magnetic antibody-antigen interactive kit: blue Y-shaped antibodies attaching to red TDP-43 antigens on a white gold-electrode disc">
-        <figcaption><strong>Magnetic antibody–antigen kit</strong>Blue Y-shaped antibodies (anti-TDP-43) magnetically dock onto red antigen pieces seated on a white disc representing the gold electrode — letting a judge physically perform the binding step that the DPV readout measures electrically.</figcaption>
-      </figure>
-      <figure>
-        <img src="assets/brain-model.jpg" alt="Laser-cut layered acrylic coronal brain model with illuminated red marker showing site of TDP-43 pathology">
-        <figcaption><strong>Layered acrylic brain model</strong>Laser-cut coronal slices stacked and backlit, with a red illuminated marker locating where TDP-43 pathology concentrates in ALS/FTD — built on the same lamination technique as our earlier brain model for AP Biology.</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
 <!-- ============ FOOTER / CITATIONS ============ -->
 <footer>
   <div class="wrap">
@@ -829,3 +899,7 @@ footer{border-top:1px solid var(--line); padding:80px 0 50px; background:var(--i
 <script src="script.js"></script>
 </body>
 </html>
+Done
+There it is — the complete, current index.html. Here's exactly what to do:
+
+Go to your repo on GitHub → click index.html → click the pencil ✏️ icon
